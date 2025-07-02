@@ -1,0 +1,51 @@
+.dashboard-container {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 32px 24px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+h1 {
+  color: #2d3748;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.welcome {
+  font-size: 1.2rem;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.roles-section, .actions-section {
+  margin-bottom: 20px;
+}
+
+.roles-section h2, .actions-section h2 {
+  font-size: 1.1rem;
+  color: #4a5568;
+  margin-bottom: 8px;
+}
+
+.role {
+  display: inline-block;
+  background: #e2e8f0;
+  color: #2b6cb0;
+  padding: 4px 12px;
+  border-radius: 12px;
+  margin-right: 8px;
+  font-weight: 500;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  margin-bottom: 6px;
+}
