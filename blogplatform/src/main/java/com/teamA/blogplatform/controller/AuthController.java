@@ -52,13 +52,10 @@ public class AuthController {
                     .username(request.getUsername())
                     .email(request.getEmail())
                     .password(request.getPassword())
-                    .roles(List.of(User.Role.READER)) // Default role
+                    .roles(request.getEffectiveRoles().stream()
+                            .map(User.Role::valueOf)
+                            .toList())
                     .build();
-
-            // Add additional roles if specified
-            if (request.getRoles() != null && !request.getRoles().isEmpty()) {
-                user.setRoles(request.getRoles());
-            }
 
             User savedUser = userService.createUser(user);
 

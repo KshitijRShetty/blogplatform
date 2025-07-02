@@ -1,26 +1,34 @@
 package com.teamA.blogplatform.dto;
 
-import com.teamA.blogplatform.model.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
-
+import java.util.Collections;
 import java.util.List;
 
 @Data
 public class RegisterRequest {
-    @NotBlank(message = "Username is required")
-    @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
+    @NotBlank
     private String username;
-    
-    @NotBlank(message = "Email is required")
-    @Email(message = "Email should be valid")
+
+    @NotBlank
+    @Email
     private String email;
-    
-    @NotBlank(message = "Password is required")
-    @Size(min = 6, message = "Password must be at least 6 characters")
+
+    @NotBlank
     private String password;
-    
-    private List<User.Role> roles;
+
+    // Support both "roles" (array) and "role" (single)
+    private List<String> roles;
+    private String role;
+
+    public List<String> getEffectiveRoles() {
+        if (roles != null && !roles.isEmpty()) {
+            return roles;
+        } else if (role != null && !role.isBlank()) {
+            return Collections.singletonList(role);
+        } else {
+            return Collections.singletonList("READER");
+        }
+    }
 }

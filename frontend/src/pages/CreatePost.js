@@ -1,15 +1,22 @@
 import React, { useState } from 'react';
+import { blogAPI } from '../services/api'; // <-- import your API
 import './CreatePost.css';
 
-const CreatePost = ({ onSubmit }) => {
+const CreatePost = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [message, setMessage] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (onSubmit) onSubmit({ title, content });
-    setTitle('');
-    setContent('');
+    try {
+      const response = await blogAPI.createPost({ title, content });
+      setMessage('Post created! ID: ' + response.data.id);
+      setTitle('');
+      setContent('');
+    } catch (error) {
+      setMessage('Error creating post.');
+    }
   };
 
   return (
@@ -40,6 +47,7 @@ const CreatePost = ({ onSubmit }) => {
         </div>
         <button type="submit" className="submit-btn">Publish</button>
       </form>
+      {message && <div className="message">{message}</div>}
     </div>
   );
 };
