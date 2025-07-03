@@ -1,0 +1,24 @@
+{
+  "dependencies": {
+    "bcrypt": "^6.0.0"
+  },
+  "name": "blogplatform",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bcrypt-temp.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KshitijRShetty/blogtest.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/KshitijRShetty/blogtest/issues"
+  },
+  "homepage": "https://github.com/KshitijRShetty/blogtest#readme"
+}

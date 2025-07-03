@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { blogAPI } from '../services/api'; // <-- import your API
+import { blogAPI } from '../services/api';
 import './CreatePost.css';
 
 const CreatePost = () => {
@@ -10,12 +10,19 @@ const CreatePost = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Step 1: Create the post (status will be DRAFT initially)
       const response = await blogAPI.createPost({ title, content });
-      setMessage('Post created! ID: ' + response.data.id);
+      const postId = response.data.id;
+
+     
+      await blogAPI.submitForReview(postId);
+
+      setMessage(`Post created and submitted for review! ID: ${postId}`);
       setTitle('');
       setContent('');
     } catch (error) {
-      setMessage('Error creating post.');
+      console.error('Error creating/submitting post:', error);
+      setMessage('Error creating or submitting post.');
     }
   };
 
