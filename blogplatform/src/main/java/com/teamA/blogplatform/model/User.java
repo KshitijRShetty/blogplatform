@@ -1,5 +1,6 @@
 package com.teamA.blogplatform.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -54,6 +55,7 @@ public class User implements UserDetails {
     private List<BlogPost> posts = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonBackReference
     @Builder.Default
     private List<Comment> comments = new ArrayList<>();
 

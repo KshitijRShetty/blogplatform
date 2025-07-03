@@ -1,5 +1,7 @@
 package com.teamA.blogplatform.service;
 
+import com.teamA.blogplatform.dto.CommentResponse;
+import com.teamA.blogplatform.dto.UserSummary;
 import com.teamA.blogplatform.exception.ResourceNotFoundException;
 import com.teamA.blogplatform.exception.UnauthorizedException;
 import com.teamA.blogplatform.model.BlogPost;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
@@ -73,6 +76,13 @@ public class CommentService {
         return commentRepository.findByBlogPostId(postId);
     }
 
+    public List<CommentResponse> getCommentResponsesByPost(Long postId) {
+        List<Comment> comments = commentRepository.findByBlogPostId(postId);
+        return comments.stream()
+                .map(this::convertToCommentResponse)
+                .collect(Collectors.toList());
+    }
+
     public List<Comment> getCommentsByUser(Long userId) {
         return commentRepository.findByUserId(userId);
     }
@@ -80,5 +90,22 @@ public class CommentService {
     public Comment getCommentById(Long commentId) {
         return commentRepository.findById(commentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Comment not found"));
+    }
+
+    public CommentResponse createCommentResponse(Long postId, String content, Long userId) {
+        Comment comment = createComment(postId, content, userId);
+        return convertToCommentResponse(comment);
+    }
+
+    private CommentResponse convertToCommentResponse(Comment comment) {
+        UserSummary userSummary = new UserSummary(comment.getUser().getId(), comment.getUser().getUsername());
+        return CommentResponse.builder()
+                .id(comment.getId())
+                .content(comment.getContent())
+                .createdAt(comment.getCreatedAt())
+                .updatedAt(comment.getUpdatedAt())
+                .user(userSummary)
+                .blogPostId(comment.getBlogPost().getId())
+                .build();
     }
 }

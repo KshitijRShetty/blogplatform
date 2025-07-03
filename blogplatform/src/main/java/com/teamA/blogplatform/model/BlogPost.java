@@ -1,6 +1,7 @@
 package com.teamA.blogplatform.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -49,6 +50,11 @@ public class BlogPost {
 
     @Builder.Default
     private LocalDateTime lastModifiedDate = LocalDateTime.now();
+
+    @OneToMany(mappedBy = "blogPost", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    @Builder.Default
+    private List<Comment> comments = new ArrayList<>();
 
     public enum PostStatus {
         DRAFT, PENDING, APPROVED, REJECTED

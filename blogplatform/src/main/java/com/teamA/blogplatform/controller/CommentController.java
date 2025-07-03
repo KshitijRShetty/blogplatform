@@ -1,6 +1,7 @@
 package com.teamA.blogplatform.controller;
 
 import com.teamA.blogplatform.dto.CommentRequest;
+import com.teamA.blogplatform.dto.CommentResponse;
 import com.teamA.blogplatform.model.Comment;
 import com.teamA.blogplatform.model.User;
 import com.teamA.blogplatform.service.CommentService;
@@ -21,9 +22,9 @@ public class CommentController {
     private CommentService commentService;
 
     @PostMapping
-    public ResponseEntity<Comment> createComment(@Valid @RequestBody CommentRequest request, Authentication authentication) {
+    public ResponseEntity<CommentResponse> createComment(@Valid @RequestBody CommentRequest request, Authentication authentication) {
         User user = (User) authentication.getPrincipal();
-        Comment comment = commentService.createComment(request.getBlogPostId(), request.getContent(), user.getId());
+        CommentResponse comment = commentService.createCommentResponse(request.getBlogPostId(), request.getContent(), user.getId());
         return ResponseEntity.ok(comment);
     }
 
@@ -44,8 +45,8 @@ public class CommentController {
     }
 
     @GetMapping("/post/{postId}")
-    public ResponseEntity<List<Comment>> getCommentsByPost(@PathVariable Long postId) {
-        List<Comment> comments = commentService.getCommentsByPost(postId);
+    public ResponseEntity<List<CommentResponse>> getCommentsByPost(@PathVariable Long postId) {
+        List<CommentResponse> comments = commentService.getCommentResponsesByPost(postId);
         return ResponseEntity.ok(comments);
     }
 

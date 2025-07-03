@@ -44,14 +44,16 @@ const PostDetail = () => {
 
     setCommentLoading(true);
     try {
-      await commentAPI.createComment({
+      const response = await commentAPI.createComment({
         blogPostId: parseInt(postId),
         content: newComment
       });
       setNewComment('');
-      fetchComments(); // Refresh comments
+      // Add the new comment to the top of the list
+      setComments(prevComments => [response.data, ...prevComments]);
     } catch (error) {
       console.error('Error creating comment:', error);
+      alert('Failed to post comment. Please try again.');
     } finally {
       setCommentLoading(false);
     }
@@ -61,9 +63,11 @@ const PostDetail = () => {
     if (window.confirm('Are you sure you want to delete this comment?')) {
       try {
         await commentAPI.deleteComment(commentId);
-        fetchComments(); // Refresh comments
+        // Remove the comment from the list immediately
+        setComments(prevComments => prevComments.filter(comment => comment.id !== commentId));
       } catch (error) {
         console.error('Error deleting comment:', error);
+        alert('Failed to delete comment. Please try again.');
       }
     }
   };
@@ -114,7 +118,7 @@ const PostDetail = () => {
 
         <div className="comments-list">
           {comments.map((comment) => (
-            <div key={comment.commentId} className="comment">
+            <div key={comment.id} className="comment">
               <div className="comment-header">
                 <strong>{comment.user?.username}</strong>
                 <span className="comment-date">
@@ -122,7 +126,7 @@ const PostDetail = () => {
                 </span>
                 {user?.id === comment.user?.id && (
                   <button 
-                    onClick={() => handleDeleteComment(comment.commentId)}
+                    onClick={() => handleDeleteComment(comment.id)}
                     className="delete-comment"
                   >
                     Delete
