@@ -1,6 +1,8 @@
 package com.teamA.blogplatform.controller;
 
 import com.teamA.blogplatform.dto.BlogPostRequest;
+import com.teamA.blogplatform.dto.BlogPostResponse;
+import com.teamA.blogplatform.dto.UserSummary;
 import com.teamA.blogplatform.model.BlogPost;
 import com.teamA.blogplatform.model.User;
 import com.teamA.blogplatform.service.BlogPostService;
@@ -22,16 +24,30 @@ public class BlogPostController {
 
     // Public endpoints
     @GetMapping("/public/all")
-    public ResponseEntity<List<BlogPost>> getAllApprovedPosts() {
-        List<BlogPost> posts = blogPostService.getAllApprovedPosts();
+    public ResponseEntity<List<BlogPostResponse>> getAllApprovedPosts() {
+        List<BlogPostResponse> posts = blogPostService.getAllApprovedPostResponses();
         return ResponseEntity.ok(posts);
     }
 
     @GetMapping("/public/{postId}")
-    public ResponseEntity<BlogPost> getPostById(@PathVariable Long postId) {
+    public ResponseEntity<BlogPostResponse> getPostById(@PathVariable Long postId) {
         BlogPost post = blogPostService.getPostById(postId);
-        return ResponseEntity.ok(post);
+        User author = post.getAuthor();
+        UserSummary authorSummary = new UserSummary(author.getId(), author.getUsername());
+        BlogPostResponse response = new BlogPostResponse(
+            post.getId(),
+            post.getTitle(),
+            post.getContent(),
+            post.getStatus().toString(),
+            post.getTags(),
+            post.getCreationDate(),
+            post.getLastModifiedDate(),
+            authorSummary
+            );
+        
+        return ResponseEntity.ok(response);
     }
+
 
     // Protected endpoints
     @PostMapping

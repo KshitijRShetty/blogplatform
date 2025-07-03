@@ -1,6 +1,8 @@
 package com.teamA.blogplatform.service;
 
 import com.teamA.blogplatform.dto.BlogPostRequest;
+import com.teamA.blogplatform.dto.BlogPostResponse;
+import com.teamA.blogplatform.dto.UserSummary;
 import com.teamA.blogplatform.exception.ResourceNotFoundException;
 import com.teamA.blogplatform.exception.UnauthorizedException;
 import com.teamA.blogplatform.model.BlogPost;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BlogPostService {
@@ -76,6 +79,30 @@ public class BlogPostService {
 
     public List<BlogPost> getAllApprovedPosts() {
         return blogPostRepository.findByStatusOrderByCreationDateDesc(BlogPost.PostStatus.APPROVED);
+    }
+
+    // ✅ NEW METHOD: return BlogPostResponse with author info
+    public List<BlogPostResponse> getAllApprovedPostResponses() {
+        List<BlogPost> posts = blogPostRepository.findByStatusOrderByCreationDateDesc(BlogPost.PostStatus.APPROVED);
+
+        return posts.stream().map(post -> {
+            User author = post.getAuthor();
+            UserSummary authorSummary = new UserSummary(
+                author.getId(),
+                author.getUsername()
+            );
+
+            return new BlogPostResponse(
+                post.getId(),
+                post.getTitle(),
+                post.getContent(),
+                post.getStatus().toString(),
+                post.getTags() != null ? post.getTags() : new ArrayList<>(),
+                post.getCreationDate(),
+                post.getLastModifiedDate(),
+                authorSummary
+            );
+        }).collect(Collectors.toList());
     }
 
     public List<BlogPost> getPostsByAuthor(Long authorId) {
