@@ -80,8 +80,8 @@ public class BlogPostController {
     }
 
     @GetMapping("/pending")
-    public ResponseEntity<List<BlogPost>> getPendingPosts() {
-        List<BlogPost> posts = blogPostService.getPendingPosts();
+    public ResponseEntity<List<BlogPostResponse>> getPendingPosts() {
+        List<BlogPostResponse> posts = blogPostService.getPendingPostResponses();
         if (posts == null) {
             posts = new ArrayList<>();
        }

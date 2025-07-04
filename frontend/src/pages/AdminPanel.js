@@ -24,10 +24,9 @@ const AdminPanel = () => {
       console.log('Raw API response:', posts);
   
       if (Array.isArray(posts)) {
-        // Don't filter on post.author if it doesn't exist
-        const filtered = posts.filter((post) => post.status === 'PENDING'); 
-        console.log('Setting posts:', filtered);
-        setPendingPosts(filtered);
+        // Backend now returns only PENDING posts in correct format
+        console.log('Setting posts:', posts);
+        setPendingPosts(posts);
       } else {
         setPendingPosts([]);
       }
