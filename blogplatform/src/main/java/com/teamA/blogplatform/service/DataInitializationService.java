@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-//@Service // Temporarily disabled
+@Service
 public class DataInitializationService implements ApplicationRunner {
 
     @Autowired

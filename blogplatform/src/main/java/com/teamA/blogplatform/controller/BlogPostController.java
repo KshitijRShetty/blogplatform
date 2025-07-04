@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -81,8 +82,11 @@ public class BlogPostController {
     @GetMapping("/pending")
     public ResponseEntity<List<BlogPost>> getPendingPosts() {
         List<BlogPost> posts = blogPostService.getPendingPosts();
+        if (posts == null) {
+            posts = new ArrayList<>();
+       }
         return ResponseEntity.ok(posts);
-    }
+   }
 
     @PutMapping("/{postId}/approve")
     public ResponseEntity<BlogPost> approvePost(@PathVariable Long postId, Authentication authentication) {

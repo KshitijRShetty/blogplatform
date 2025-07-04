@@ -10,28 +10,41 @@ const AdminPanel = () => {
   const { hasRole } = useAuth();
 
   useEffect(() => {
-    if (hasRole('EDITOR')) {
+    if (hasRole && hasRole('EDITOR')) {
       fetchPendingPosts();
     }
-  }, []);
+  }, [hasRole]);
 
   const fetchPendingPosts = async () => {
     try {
       setLoading(true);
       const response = await blogAPI.getPendingPosts();
-      setPendingPosts(response.data);
+      const posts = response.data;
+  
+      console.log('Raw API response:', posts);
+  
+      if (Array.isArray(posts)) {
+        // Don't filter on post.author if it doesn't exist
+        const filtered = posts.filter((post) => post.status === 'PENDING'); 
+        console.log('Setting posts:', filtered);
+        setPendingPosts(filtered);
+      } else {
+        setPendingPosts([]);
+      }
     } catch (error) {
       console.error('Error fetching pending posts:', error);
+      setPendingPosts([]);
     } finally {
       setLoading(false);
     }
   };
+  
 
   const handleApprove = async (postId) => {
     setActionLoading(postId);
     try {
       await blogAPI.approvePost(postId);
-      fetchPendingPosts(); // Refresh the list
+      fetchPendingPosts();
       alert('Post approved successfully!');
     } catch (error) {
       console.error('Error approving post:', error);
@@ -46,7 +59,7 @@ const AdminPanel = () => {
       setActionLoading(postId);
       try {
         await blogAPI.rejectPost(postId);
-        fetchPendingPosts(); // Refresh the list
+        fetchPendingPosts();
         alert('Post rejected successfully!');
       } catch (error) {
         console.error('Error rejecting post:', error);
@@ -57,7 +70,7 @@ const AdminPanel = () => {
     }
   };
 
-  if (!hasRole('EDITOR')) {
+  if (!hasRole || !hasRole('EDITOR')) {
     return (
       <div className="admin-panel">
         <div className="error">
@@ -66,6 +79,8 @@ const AdminPanel = () => {
       </div>
     );
   }
+
+  console.log('pendingPosts state during render:', pendingPosts);
 
   return (
     <div className="admin-panel">
@@ -76,9 +91,9 @@ const AdminPanel = () => {
         <div className="loading">Loading pending posts...</div>
       ) : (
         <div className="pending-posts">
-          <h2>Pending Posts ({pendingPosts.length})</h2>
-          
-          {pendingPosts.length === 0 ? (
+          <h2>Pending Posts ({Array.isArray(pendingPosts) ? pendingPosts.length : 0})</h2>
+
+          {Array.isArray(pendingPosts) && pendingPosts.length === 0 ? (
             <p className="no-posts">No posts pending approval.</p>
           ) : (
             <div className="posts-list">
@@ -87,20 +102,19 @@ const AdminPanel = () => {
                   <div className="post-header">
                     <h3>{post.title}</h3>
                     <div className="post-author">
-                      By {post.author?.username}
+                      By {post.author?.username || 'Unknown'}
                     </div>
                     <div className="post-date">
                       {new Date(post.creationDate).toLocaleDateString()}
                     </div>
                   </div>
-                  
+
                   <div className="post-content-preview">
-                    {post.content.length > 200 
-                      ? `${post.content.substring(0, 200)}...` 
-                      : post.content
-                    }
+                    {post.content.length > 200
+                      ? `${post.content.substring(0, 200)}...`
+                      : post.content}
                   </div>
-                  
+
                   <div className="post-actions">
                     <button
                       onClick={() => handleApprove(post.id)}
@@ -109,7 +123,7 @@ const AdminPanel = () => {
                     >
                       {actionLoading === post.id ? 'Processing...' : 'Approve'}
                     </button>
-                    
+
                     <button
                       onClick={() => handleReject(post.id)}
                       disabled={actionLoading === post.id}

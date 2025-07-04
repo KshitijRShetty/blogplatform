@@ -110,7 +110,11 @@ public class BlogPostService {
     }
 
     public List<BlogPost> getPendingPosts() {
-        return blogPostRepository.findByStatusOrderByCreationDateDesc(BlogPost.PostStatus.PENDING);
+        List<BlogPost> posts = blogPostRepository.findByStatusOrderByCreationDateDesc(BlogPost.PostStatus.PENDING);
+        if (posts == null) {
+            posts = new ArrayList<>();
+        }
+        return posts;
     }
 
     public BlogPost approvePost(Long postId, Long editorId) {
