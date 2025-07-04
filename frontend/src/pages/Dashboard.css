@@ -1,5 +1,5 @@
 .dashboard-container {
-  max-width: 500px;
+  max-width: 800px;
   margin: 40px auto;
   padding: 32px 24px;
   background: #fff;
@@ -8,44 +8,163 @@
   font-family: 'Segoe UI', Arial, sans-serif;
 }
 
-h1 {
+.dashboard-header {
+  margin-bottom: 32px;
+}
+
+.welcome-section {
+  text-align: center;
+}
+
+.dashboard-title {
   color: #2d3748;
-  margin-bottom: 16px;
-  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 8px;
+  font-weight: 600;
 }
 
-.welcome {
-  font-size: 1.2rem;
-  margin-bottom: 24px;
-  text-align: center;
-}
-
-.roles-section, .actions-section {
-  margin-bottom: 20px;
-}
-
-.roles-section h2, .actions-section h2 {
+.greeting {
   font-size: 1.1rem;
   color: #4a5568;
-  margin-bottom: 8px;
-}
-
-.role {
-  display: inline-block;
-  background: #e2e8f0;
-  color: #2b6cb0;
-  padding: 4px 12px;
-  border-radius: 12px;
-  margin-right: 8px;
-  font-weight: 500;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
   margin: 0;
 }
 
-li {
-  margin-bottom: 6px;
+.actions-section {
+  margin-bottom: 32px;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  color: #2d3748;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.action-card {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.action-card:hover {
+  background: #e2e8f0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.action-icon {
+  font-size: 2rem;
+  margin-right: 16px;
+  min-width: 40px;
+}
+
+.action-content {
+  flex: 1;
+}
+
+.action-title {
+  font-size: 1.1rem;
+  color: #2d3748;
+  margin: 0 0 4px 0;
+  font-weight: 600;
+}
+
+.action-description {
+  color: #6b7280;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.account-section {
+  margin-bottom: 24px;
+}
+
+.account-info {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.user-avatar {
+  margin-right: 16px;
+}
+
+.avatar-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #3b82f6;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.user-details {
+  flex: 1;
+}
+
+.username {
+  font-size: 1.2rem;
+  color: #2d3748;
+  margin: 0 0 4px 0;
+  font-weight: 600;
+}
+
+.user-email {
+  color: #6b7280;
+  margin: 0 0 8px 0;
+  font-size: 0.9rem;
+}
+
+.user-roles {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.role-badge {
+  background: #dbeafe;
+  color: #1e40af;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    margin: 20px;
+    padding: 20px;
+  }
+  
+  .actions-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .account-info {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .user-avatar {
+    margin-right: 0;
+    margin-bottom: 16px;
+  }
 }
