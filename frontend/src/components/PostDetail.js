@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { blogAPI, commentAPI } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
@@ -13,21 +13,16 @@ const PostDetail = () => {
   const [commentLoading, setCommentLoading] = useState(false);
   const { isAuthenticated, user } = useAuth();
 
-  useEffect(() => {
-    fetchPost();
-    fetchComments();
-  }, [postId]);
-
-  const fetchPost = async () => {
+  const fetchPost = useCallback(async () => {
     try {
       const response = await blogAPI.getPost(postId);
       setPost(response.data);
     } catch (error) {
       console.error('Error fetching post:', error);
     }
-  };
+  }, [postId]);
 
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     try {
       const response = await commentAPI.getComments(postId);
       setComments(response.data);
@@ -36,7 +31,12 @@ const PostDetail = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [postId]);
+
+  useEffect(() => {
+    fetchPost();
+    fetchComments();
+  }, [fetchPost, fetchComments]);
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();

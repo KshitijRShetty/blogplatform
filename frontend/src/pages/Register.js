@@ -22,7 +22,7 @@ const Register = () => {
   }
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value, checked } = e.target;
     
     if (name === 'roles') {
       const newRoles = [...formData.roles];

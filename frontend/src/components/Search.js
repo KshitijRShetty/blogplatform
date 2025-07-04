@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { searchAPI } from '../services/api';
 import './Search.css';
 
@@ -21,6 +22,7 @@ const Search = ({ onResults }) => {
       }
     } catch (error) {
       console.error('Search failed:', error);
+      setResults({ posts: [], users: [] });
     } finally {
       setLoading(false);
     }
@@ -34,7 +36,7 @@ const Search = ({ onResults }) => {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search posts..."
+            placeholder="Search posts by title, content, or author name..."
             className="search-input"
           />
           <button type="submit" disabled={loading} className="search-button">
@@ -49,11 +51,21 @@ const Search = ({ onResults }) => {
           <div className="search-results-list">
             {results.posts.map((post) => (
               <div key={post.id} className="search-result-item">
-                <h4>{post.title}</h4>
-                <p>{post.content.substring(0, 150)}...</p>
+                <h4>
+                  <Link to={`/post/${post.id}`} className="result-title-link">
+                    {post.title}
+                  </Link>
+                </h4>
+                <p className="result-content">
+                  {post.content.length > 150 
+                    ? `${post.content.substring(0, 150)}...` 
+                    : post.content
+                  }
+                </p>
                 <div className="result-meta">
-                  <span>By {post.author?.username}</span>
-                  <span>{new Date(post.creationDate).toLocaleDateString()}</span>
+                  <span className="result-author">By {post.author?.username}</span>
+                  <span className="result-date">{new Date(post.creationDate).toLocaleDateString()}</span>
+                  <span className={`result-status ${post.status?.toLowerCase()}`}>{post.status}</span>
                 </div>
               </div>
             ))}

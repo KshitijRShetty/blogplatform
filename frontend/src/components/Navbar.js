@@ -24,8 +24,8 @@ const Navbar = () => {
             Home
           </Link>
           
-          <Link to="/search" className="nav-link">
-            Search
+          <Link to="/search" className="nav-link" title="Search posts by title, content, or author">
+             Search
           </Link>
           
           {isAuthenticated() ? (

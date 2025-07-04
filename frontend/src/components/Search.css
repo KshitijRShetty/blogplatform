@@ -118,6 +118,60 @@
   align-items: center;
 }
 
+.result-title-link {
+  color: #007bff !important;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.result-title-link:hover {
+  text-decoration: underline;
+  color: #0056b3 !important;
+}
+
+.result-content {
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.result-author {
+  font-weight: 500;
+  color: #007bff;
+}
+
+.result-date {
+  color: #888;
+}
+
+.result-status {
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.result-status.approved {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.result-status.pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.result-status.draft {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.result-status.rejected {
+  background-color: #f5c6cb;
+  color: #721c24;
+}
+
 @media (max-width: 768px) {
   .search-container {
     padding: 1rem 0.5rem;

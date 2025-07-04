@@ -1,5 +1,6 @@
 package com.teamA.blogplatform.controller;
 
+import com.teamA.blogplatform.dto.BlogPostResponse;
 import com.teamA.blogplatform.model.BlogPost;
 import com.teamA.blogplatform.model.User;
 import com.teamA.blogplatform.service.BlogPostService;
@@ -22,9 +23,17 @@ public class SearchController {
     @Autowired
     private UserService userService;
 
+    // Enhanced search that includes author username in the search
     @GetMapping("/posts")
-    public ResponseEntity<List<BlogPost>> searchPosts(@RequestParam String q) {
-        List<BlogPost> posts = blogPostService.searchPosts(q);
+    public ResponseEntity<List<BlogPostResponse>> searchPosts(@RequestParam String q) {
+        List<BlogPostResponse> posts = blogPostService.searchPostResponses(q);
+        return ResponseEntity.ok(posts);
+    }
+    
+    // Search posts by specific author username
+    @GetMapping("/posts/by-author")
+    public ResponseEntity<List<BlogPost>> searchPostsByAuthor(@RequestParam String username) {
+        List<BlogPost> posts = blogPostService.searchPostsByAuthor(username);
         return ResponseEntity.ok(posts);
     }
 
@@ -40,7 +49,7 @@ public class SearchController {
 
     @GetMapping("/all")
     public ResponseEntity<SearchResults> searchAll(@RequestParam String q) {
-        List<BlogPost> posts = blogPostService.searchPosts(q);
+        List<BlogPostResponse> posts = blogPostService.searchPostResponses(q);
         List<User> users = userService.findAllUsers().stream()
                 .filter(user -> user.getUsername().toLowerCase().contains(q.toLowerCase()) ||
                                user.getEmail().toLowerCase().contains(q.toLowerCase()))
@@ -50,10 +59,10 @@ public class SearchController {
     }
 
     public static class SearchResults {
-        public List<BlogPost> posts;
+        public List<BlogPostResponse> posts;
         public List<User> users;
 
-        public SearchResults(List<BlogPost> posts, List<User> users) {
+        public SearchResults(List<BlogPostResponse> posts, List<User> users) {
             this.posts = posts;
             this.users = users;
         }

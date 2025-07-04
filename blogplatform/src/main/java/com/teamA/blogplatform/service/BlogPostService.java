@@ -192,7 +192,38 @@ public class BlogPostService {
     }
 
     public List<BlogPost> searchPosts(String query) {
-        return blogPostRepository.findByTitleContainingIgnoreCaseOrContentContainingIgnoreCaseAndStatus(
-                query, query, BlogPost.PostStatus.APPROVED);
+        return blogPostRepository.findByTitleOrContentOrAuthorUsernameContainingIgnoreCaseAndStatus(
+                query, BlogPost.PostStatus.APPROVED);
+    }
+    
+    // Search posts by author username only
+    public List<BlogPost> searchPostsByAuthor(String username) {
+        return blogPostRepository.findByAuthorUsernameContainingIgnoreCaseAndStatus(
+                username, BlogPost.PostStatus.APPROVED);
+    }
+    
+    // Enhanced search that returns BlogPostResponse objects
+    public List<BlogPostResponse> searchPostResponses(String query) {
+        List<BlogPost> posts = blogPostRepository.findByTitleOrContentOrAuthorUsernameContainingIgnoreCaseAndStatus(
+                query, BlogPost.PostStatus.APPROVED);
+        
+        return posts.stream().map(post -> {
+            User author = post.getAuthor();
+            UserSummary authorSummary = new UserSummary(
+                author.getId(),
+                author.getUsername()
+            );
+            
+            return new BlogPostResponse(
+                post.getId(),
+                post.getTitle(),
+                post.getContent(),
+                post.getStatus().toString(),
+                post.getTags() != null ? post.getTags() : new ArrayList<>(),
+                post.getCreationDate(),
+                post.getLastModifiedDate(),
+                authorSummary
+            );
+        }).collect(Collectors.toList());
     }
 }

@@ -18,4 +18,16 @@ public interface BlogPostRepository extends JpaRepository<BlogPost, Long> {
             @Param("title") String title, 
             @Param("content") String content, 
             @Param("status") BlogPost.PostStatus status);
+    
+    // Enhanced search that includes author username
+    @Query("SELECT p FROM BlogPost p WHERE (LOWER(p.title) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(p.content) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(p.author.username) LIKE LOWER(CONCAT('%', :query, '%'))) AND p.status = :status ORDER BY p.creationDate DESC")
+    List<BlogPost> findByTitleOrContentOrAuthorUsernameContainingIgnoreCaseAndStatus(
+            @Param("query") String query, 
+            @Param("status") BlogPost.PostStatus status);
+    
+    // Search posts by author username only
+    @Query("SELECT p FROM BlogPost p WHERE LOWER(p.author.username) LIKE LOWER(CONCAT('%', :username, '%')) AND p.status = :status ORDER BY p.creationDate DESC")
+    List<BlogPost> findByAuthorUsernameContainingIgnoreCaseAndStatus(
+            @Param("username") String username,
+            @Param("status") BlogPost.PostStatus status);
 }

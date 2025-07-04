@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
       if (storedToken && storedUser) {
         try {
           // Validate token
-          const response = await authAPI.validateToken();
+          await authAPI.validateToken();
           setUser(JSON.parse(storedUser));
           setToken(storedToken);
         } catch (error) {

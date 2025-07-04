@@ -24,6 +24,17 @@
   opacity: 0.9;
 }
 
+.search-tip {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+  font-size: 1rem !important;
+  opacity: 1 !important;
+  backdrop-filter: blur(10px);
+}
+
 .posts-container h2 {
   margin-bottom: 2rem;
   color: #333;

@@ -76,7 +76,9 @@ export const followAPI = {
 
 // Search API calls
 export const searchAPI = {
+  // Enhanced search API call
   searchPosts: (query) => api.get(`/search/posts?q=${encodeURIComponent(query)}`),
+  searchPostsByAuthor: (username) => api.get(`/search/posts/by-author?username=${encodeURIComponent(username)}`),
 };
 
 export default api;

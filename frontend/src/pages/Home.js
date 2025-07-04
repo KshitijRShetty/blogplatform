@@ -38,6 +38,9 @@ const Home = () => {
       <div className="hero">
         <h1>Welcome to BlogPlatform</h1>
         <p>Discover amazing stories from our community of writers</p>
+        <p className="search-tip">
+           <strong>New!</strong> Use our enhanced search to find posts by author name.
+        </p>
       </div>
 
       <div className="posts-container">
