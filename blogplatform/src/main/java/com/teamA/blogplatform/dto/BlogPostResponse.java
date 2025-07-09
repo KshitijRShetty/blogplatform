@@ -12,6 +12,8 @@ public class BlogPostResponse {
     private LocalDateTime creationDate;
     private LocalDateTime lastModifiedDate;
     private UserSummary author;
+    private int likeCount;
+    private boolean isLikedByCurrentUser;
 
     // Constructors
     public BlogPostResponse() {}
@@ -27,6 +29,22 @@ public class BlogPostResponse {
         this.creationDate = creationDate;
         this.lastModifiedDate = lastModifiedDate;
         this.author = author;
+    }
+
+    public BlogPostResponse(Long id, String title, String content, String status,
+                            List<String> tags, LocalDateTime creationDate,
+                            LocalDateTime lastModifiedDate, UserSummary author,
+                            int likeCount, boolean isLikedByCurrentUser) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.status = status;
+        this.tags = tags;
+        this.creationDate = creationDate;
+        this.lastModifiedDate = lastModifiedDate;
+        this.author = author;
+        this.likeCount = likeCount;
+        this.isLikedByCurrentUser = isLikedByCurrentUser;
     }
 
     // Getters & setters
@@ -53,4 +71,10 @@ public class BlogPostResponse {
 
     public UserSummary getAuthor() { return author; }
     public void setAuthor(UserSummary author) { this.author = author; }
+
+    public int getLikeCount() { return likeCount; }
+    public void setLikeCount(int likeCount) { this.likeCount = likeCount; }
+
+    public boolean isLikedByCurrentUser() { return isLikedByCurrentUser; }
+    public void setLikedByCurrentUser(boolean likedByCurrentUser) { this.isLikedByCurrentUser = likedByCurrentUser; }
 }

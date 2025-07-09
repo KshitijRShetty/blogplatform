@@ -26,6 +26,9 @@ public class BlogPostService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PostLikeService postLikeService;
+
     public BlogPost createPost(BlogPostRequest request, Long userId) {
         User author = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
@@ -225,5 +228,58 @@ public class BlogPostService {
                 authorSummary
             );
         }).collect(Collectors.toList());
+    }
+
+    // Methods with like information for authenticated users
+    public List<BlogPostResponse> getAllApprovedPostResponsesWithLikes(Long currentUserId) {
+        List<BlogPost> posts = blogPostRepository.findByStatusOrderByCreationDateDesc(BlogPost.PostStatus.APPROVED);
+
+        return posts.stream().map(post -> {
+            User author = post.getAuthor();
+            UserSummary authorSummary = new UserSummary(
+                author.getId(),
+                author.getUsername()
+            );
+
+            int likeCount = postLikeService.getLikeCount(post.getId());
+            boolean isLiked = currentUserId != null ? postLikeService.isLikedByUser(post.getId(), currentUserId) : false;
+
+            return new BlogPostResponse(
+                post.getId(),
+                post.getTitle(),
+                post.getContent(),
+                post.getStatus().toString(),
+                post.getTags() != null ? post.getTags() : new ArrayList<>(),
+                post.getCreationDate(),
+                post.getLastModifiedDate(),
+                authorSummary,
+                likeCount,
+                isLiked
+            );
+        }).collect(Collectors.toList());
+    }
+
+    public BlogPostResponse getPostResponseWithLikes(Long postId, Long currentUserId) {
+        BlogPost post = blogPostRepository.findById(postId)
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found"));
+        
+        User author = post.getAuthor();
+        UserSummary authorSummary = new UserSummary(author.getId(), author.getUsername());
+        
+        int likeCount = postLikeService.getLikeCount(postId);
+        boolean isLiked = currentUserId != null ? postLikeService.isLikedByUser(postId, currentUserId) : false;
+        
+        return new BlogPostResponse(
+            post.getId(),
+            post.getTitle(),
+            post.getContent(),
+            post.getStatus().toString(),
+            post.getTags(),
+            post.getCreationDate(),
+            post.getLastModifiedDate(),
+            authorSummary,
+            likeCount,
+            isLiked
+        );
     }
 }

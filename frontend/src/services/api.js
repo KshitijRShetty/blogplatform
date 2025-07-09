@@ -47,7 +47,9 @@ export const authAPI = {
 // Blog posts API calls
 export const blogAPI = {
   getAllPosts: () => api.get('/blogposts/public/all'),
+  getAllPostsWithLikes: () => api.get('/blogposts/all'),
   getPost: (postId) => api.get(`/blogposts/public/${postId}`),
+  getPostWithLikes: (postId) => api.get(`/blogposts/${postId}`),
   createPost: (postData) => api.post('/blogposts', postData),
   updatePost: (postId, postData) => api.put(`/blogposts/${postId}`, postData),
   deletePost: (postId) => api.delete(`/blogposts/${postId}`),
@@ -79,6 +81,13 @@ export const searchAPI = {
   // Enhanced search API call
   searchPosts: (query) => api.get(`/search/posts?q=${encodeURIComponent(query)}`),
   searchPostsByAuthor: (username) => api.get(`/search/posts/by-author?username=${encodeURIComponent(username)}`),
+};
+
+// Like API calls
+export const likeAPI = {
+  toggleLike: (postId) => api.post(`/likes/toggle/${postId}`),
+  getLikeStatus: (postId) => api.get(`/likes/status/${postId}`),
+  getLikeCount: (postId) => api.get(`/likes/count/${postId}`),
 };
 
 export default api;

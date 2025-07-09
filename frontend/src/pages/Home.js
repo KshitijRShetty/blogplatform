@@ -1,21 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { blogAPI } from '../services/api';
+import { useAuth } from '../contexts/AuthContext';
+import LikeButton from '../components/LikeButton';
 import './Home.css';
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const { user } = useAuth();
 
   useEffect(() => {
     fetchPosts();
-  }, []);
+  }, [user]);
 
   const fetchPosts = async () => {
     try {
       setLoading(true);
-      const response = await blogAPI.getAllPosts();
+      // Use authenticated endpoint if user is logged in, otherwise use public endpoint
+      const response = user ? await blogAPI.getAllPostsWithLikes() : await blogAPI.getAllPosts();
       setPosts(response.data);
     } catch (error) {
       setError('Failed to load posts');
@@ -71,6 +75,17 @@ const Home = () => {
                     {post.status}
                   </span>
                 </div>
+                <LikeButton 
+                  postId={post.id} 
+                  initialLikeCount={post.likeCount} 
+                  initialIsLiked={post.isLikedByCurrentUser} 
+                  onLikeUpdate={(updatedPostId, newIsLiked, newLikeCount) => {
+                    setPosts(prevPosts => prevPosts.map(p =>
+                      p.id === updatedPostId 
+                      ? { ...p, isLikedByCurrentUser: newIsLiked, likeCount: newLikeCount } 
+                      : p));
+                  }}
+                />
               </div>
             ))}
           </div>

@@ -30,6 +30,17 @@ public class BlogPostController {
         return ResponseEntity.ok(posts);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<BlogPostResponse>> getAllApprovedPostsWithLikes(Authentication authentication) {
+        Long currentUserId = null;
+        if (authentication != null) {
+            User user = (User) authentication.getPrincipal();
+            currentUserId = user.getId();
+        }
+        List<BlogPostResponse> posts = blogPostService.getAllApprovedPostResponsesWithLikes(currentUserId);
+        return ResponseEntity.ok(posts);
+    }
+
     @GetMapping("/public/{postId}")
     public ResponseEntity<BlogPostResponse> getPostById(@PathVariable Long postId) {
         BlogPost post = blogPostService.getPostById(postId);
@@ -46,6 +57,17 @@ public class BlogPostController {
             authorSummary
             );
         
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{postId}")
+    public ResponseEntity<BlogPostResponse> getPostByIdWithLikes(@PathVariable Long postId, Authentication authentication) {
+        Long currentUserId = null;
+        if (authentication != null) {
+            User user = (User) authentication.getPrincipal();
+            currentUserId = user.getId();
+        }
+        BlogPostResponse response = blogPostService.getPostResponseWithLikes(postId, currentUserId);
         return ResponseEntity.ok(response);
     }
 

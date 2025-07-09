@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { blogAPI, commentAPI } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
+import LikeButton from './LikeButton';
 import './PostDetail.css';
 
 const PostDetail = () => {
@@ -15,12 +16,13 @@ const PostDetail = () => {
 
   const fetchPost = useCallback(async () => {
     try {
-      const response = await blogAPI.getPost(postId);
+      // Use authenticated endpoint if user is logged in, otherwise use public endpoint
+      const response = user ? await blogAPI.getPostWithLikes(postId) : await blogAPI.getPost(postId);
       setPost(response.data);
     } catch (error) {
       console.error('Error fetching post:', error);
     }
-  }, [postId]);
+  }, [postId, user]);
 
   const fetchComments = useCallback(async () => {
     try {
@@ -96,6 +98,18 @@ const PostDetail = () => {
             <p key={index}>{paragraph}</p>
           ))}
         </div>
+        <LikeButton 
+          postId={post.id} 
+          initialLikeCount={post.likeCount || 0} 
+          initialIsLiked={post.isLikedByCurrentUser || false} 
+          onLikeUpdate={(updatedPostId, newIsLiked, newLikeCount) => {
+            setPost(prevPost => ({ 
+              ...prevPost, 
+              isLikedByCurrentUser: newIsLiked, 
+              likeCount: newLikeCount 
+            }));
+          }}
+        />
       </article>
 
       <section className="comments-section">

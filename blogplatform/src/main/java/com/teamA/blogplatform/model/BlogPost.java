@@ -56,7 +56,17 @@ public class BlogPost {
     @Builder.Default
     private List<Comment> comments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "blogPost", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference("post-likes")
+    @Builder.Default
+    private List<PostLike> likes = new ArrayList<>();
+
     public enum PostStatus {
         DRAFT, PENDING, APPROVED, REJECTED
+    }
+
+    // Helper method to get like count
+    public int getLikeCount() {
+        return likes != null ? likes.size() : 0;
     }
 }

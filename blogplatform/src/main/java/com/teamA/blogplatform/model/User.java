@@ -69,6 +69,12 @@ public class User implements UserDetails {
     @Builder.Default
     private List<Follow> followerRelations = new ArrayList<>();
 
+    // Likes relationship - posts liked by this user
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonBackReference("user-likes")
+    @Builder.Default
+    private List<PostLike> likedPosts = new ArrayList<>();
+
     // UserDetails implementation
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
